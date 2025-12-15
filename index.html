@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoinUp – Sports Events</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style/style.css">
+</head>
+<body>
+    <!-- Top language + logo bar -->
+    <header class="top-bar">
+        <div class="logo">Join<span>Up</span></div>
+        <div class="top-right">
+            <select id="languageSelect" onchange="changeLanguage(this.value)">
+                <option value="en">EN</option>
+                <option value="es">ES</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- Onboarding Screen -->
+    <div id="onboardingScreen" class="screen active">
+        <div class="mobile-container">
+            <div class="hero-illustration">🏃‍♂️🏀</div>
+            <h1 class="hero-title" data-translate="onboarding.title">
+                Meet new people through sports
+            </h1>
+            <p class="hero-subtitle" data-translate="onboarding.subtitle">
+                Find players near you, join games, and never play alone again.
+            </p>
+            <button class="btn-primary btn-full" onclick="showScreen('signupScreen')" data-translate="onboarding.getStarted">
+                Get Started
+            </button>
+            <button class="btn-secondary btn-full" onclick="showScreen('loginScreen')" data-translate="onboarding.loginInstead">
+                I already have an account
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen">
+        <div class="mobile-container">
+            <button class="btn-back" onclick="showScreen('onboardingScreen')">←</button>
+            <div class="auth-header">
+                <h2 class="screen-title" data-translate="login.title">Welcome back</h2>
+                <p class="screen-subtitle" data-translate="login.subtitle">Login to keep playing</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label data-translate="login.email">Email</label>
+                    <input type="email" id="loginEmail" placeholder="you@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="login.password">Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button class="btn-primary btn-full" type="submit" data-translate="login.signIn">
+                    Sign In
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                <span data-translate="login.noAccount">Don't have an account?</span>
+                <a href="#" onclick="showScreen('signupScreen')" data-translate="login.signUp">
+                    Sign Up
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Sign Up Screen -->
+    <div id="signupScreen" class="screen">
+        <div class="mobile-container">
+            <button class="btn-back" onclick="showScreen('onboardingScreen')">←</button>
+            <div class="auth-header">
+                <h2 class="screen-title">Create account</h2>
+                <p class="screen-subtitle">Join players near you</p>
+            </div>
+
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="signupUsername" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" placeholder="you@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" placeholder="••••••••" minlength="6" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm password</label>
+                    <input type="password" id="signupPassword2" placeholder="••••••••" required>
+                </div>
+
+                <button class="btn-primary btn-full" type="submit">
+                    Create account
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                <span>Already have an account?</span>
+                <a href="#" onclick="showScreen('loginScreen')">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Home Screen -->
+    <div id="homeScreen" class="screen">
+        <div class="mobile-container">
+            <header class="home-header">
+                <div>
+                    <h2 class="screen-title" data-translate="home.heading">Find a game today</h2>
+                    <p class="screen-subtitle" data-translate="home.subheading">Based in Alicante, Spain</p>
+                </div>
+                <button class="avatar-button" onclick="showScreen('profileScreen')">
+                    <span id="avatarInitial">U</span>
+                </button>
+            </header>
+
+            <div class="sport-filters">
+                <button class="filter-chip active" onclick="filterSport('all', this)" data-translate="filters.all">All</button>
+                <button class="filter-chip" onclick="filterSport('football', this)">⚽ Football</button>
+                <button class="filter-chip" onclick="filterSport('basketball', this)">🏀 Basketball</button>
+                <button class="filter-chip" onclick="filterSport('tennis', this)">🎾 Tennis</button>
+                <button class="filter-chip" onclick="filterSport('volleyball', this)">🏐 Volleyball</button>
+            </div>
+
+            <section>
+                <h3 class="section-title" data-translate="home.today">Today near you</h3>
+                <div id="eventsList" class="events-list">
+                    <!-- Events injected by JS -->
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Event Detail Screen -->
+    <div id="eventDetailScreen" class="screen">
+        <div class="mobile-container">
+            <button class="btn-back" onclick="showScreen('homeScreen')">←</button>
+            <div id="eventDetailContent">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Screen -->
+    <div id="chatScreen" class="screen">
+        <div class="mobile-container chat-container">
+            <header class="chat-header">
+                <button class="btn-back" onclick="goBackFromChat()">←</button>
+                <div>
+                    <h3 id="chatEventTitle" class="chat-title">Chat</h3>
+                    <p class="chat-subtitle">Players in this game</p>
+                </div>
+            </header>
+
+            <div id="chatMessages" class="chat-messages">
+                <!-- Messages injected by JS -->
+            </div>
+
+            <form id="chatForm" class="chat-input" onsubmit="handleChatSend(event)">
+                <input type="text" id="chatInput" placeholder="Write a message..." autocomplete="off">
+                <button type="submit">➤</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Screen -->
+    <div id="profileScreen" class="screen">
+        <div class="mobile-container">
+            <button class="btn-back" onclick="showScreen('homeScreen')">←</button>
+
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <h2 class="profile-name">Guest</h2>
+                <p class="profile-email"></p>
+                <p class="profile-location">📍 Alicante, Spain</p>
+            </div>
+
+            <section class="profile-section">
+                <h3>Stats</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Games joined</span>
+                        <span class="stat-value">12</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Sports</span>
+                        <span class="stat-value">3</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Friends</span>
+                        <span class="stat-value">5</span>
+                    </div>
+                </div>
+            </section>
+
+            <button class="btn-logout" onclick="handleLogout()" data-translate="profile.logout">
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <script src="/script/script.js"></script>
+</body>
+</html>
