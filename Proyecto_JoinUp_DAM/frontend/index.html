@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoinUp - Meet. Play. Connect.</title>
+    <link rel="stylesheet" href="/Proyecto_JoinUp_DAM/frontend/css/styles.css">
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="screen active">
+        <div class="welcome-container">
+            <div class="logo-container">
+                <div class="logo-icon">⚡</div>
+            </div>
+            <h1 class="welcome-title">JoinUp</h1>
+            <p class="welcome-tagline">Meet. Play. Connect.</p>
+            <button class="btn-primary" onclick="showScreen('loginScreen')">Get Started</button>
+            <button class="btn-language" onclick="toggleLanguage()">🌐 <span id="langToggle">ES</span></button>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen">
+        <div class="mobile-container">
+            <button class="btn-back" onclick="showScreen('welcomeScreen')">← Back</button>
+            <div class="login-content">
+                <h2 class="screen-title" data-translate="login.title">Welcome Back</h2>
+                <p class="screen-subtitle" data-translate="login.subtitle">Sign in to continue</p>
+                
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label data-translate="login.email">Email</label>
+                        <input type="email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="login.password">Password</label>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-submit" data-translate="login.signIn">Sign In</button>
+                </form>
+                
+                <div class="divider">or</div>
+                
+                <button class="btn-google">
+                    <span>🔍</span> Continue with Google
+                </button>
+                
+                <p class="signup-link">
+                    <span data-translate="login.noAccount">Don't have an account?</span> 
+                    <a href="#" data-translate="login.signUp">Sign Up</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Home Feed Screen -->
+    <div id="homeScreen" class="screen">
+        <div class="mobile-container">
+            <!-- Header -->
+            <div class="home-header">
+                <div>
+                    <h2 class="header-title" data-translate="home.title">Discover Events</h2>
+                    <p class="header-location">📍 Alicante, Spain</p>
+                </div>
+                <button class="btn-icon" onclick="showScreen('profileScreen')">👤</button>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <input type="text" placeholder="Search events..." data-translate-placeholder="home.search">
+                <button class="btn-icon">🔍</button>
+            </div>
+
+            <!-- Sport Filters -->
+            <div class="sport-filters">
+                <button class="filter-chip active" onclick="filterSport('all')">All</button>
+                <button class="filter-chip" onclick="filterSport('football')">⚽ Football</button>
+                <button class="filter-chip" onclick="filterSport('basketball')">🏀 Basketball</button>
+                <button class="filter-chip" onclick="filterSport('tennis')">🎾 Tennis</button>
+                <button class="filter-chip" onclick="filterSport('volleyball')">🏐 Volleyball</button>
+            </div>
+
+            <!-- Event Cards -->
+            <div class="events-grid" id="eventsContainer">
+                <!-- Events will be loaded by JavaScript -->
+            </div>
+
+            <!-- Floating Create Button -->
+            <button class="btn-floating" onclick="showScreen('createEventScreen')">
+                ➕
+            </button>
+        </div>
+    </div>
+
+    <!-- Event Details Screen -->
+    <div id="eventDetailsScreen" class="screen">
+        <div class="mobile-container">
+            <button class="btn-back" onclick="showScreen('homeScreen')">←</button>
+            <div class="event-detail-image">
+                <img id="detailImage" src="" alt="Event">
+            </div>
+            <div class="event-detail-content">
+                <div class="event-detail-header">
+                    <h2 id="detailTitle">Event Title</h2>
+                    <span class="event-badge" id="detailLevel">Intermediate</span>
+                </div>
+                <div class="event-detail-info">
+                    <div class="info-item">
+                        <span class="info-icon">📍</span>
+                        <span id="detailLocation">Location</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">🕐</span>
+                        <span id="detailTime">Time</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">👥</span>
+                        <span id="detailPlayers">Players</span>
+                    </div>
+                </div>
+                <div class="event-description">
+                    <h3 data-translate="eventDetails.description">Description</h3>
+                    <p id="detailDescription">Looking for players to join a friendly match...</p>
+                </div>
+                <div class="event-participants">
+                    <h3 data-translate="eventDetails.participants">Participants</h3>
+                    <div class="participants-list">
+                        <div class="participant">👤 Carlos M.</div>
+                        <div class="participant">👤 Sofia L.</div>
+                        <div class="participant">👤 Miguel R.</div>
+                    </div>
+                </div>
+                <div class="event-actions">
+                    <button class="btn-submit" onclick="joinEvent()">
+                        <span data-translate="eventDetails.joinEvent">Join Event</span>
+                    </button>
+                    <button class="btn-secondary" onclick="showScreen('chatScreen')">
+                        💬 <span data-translate="eventDetails.chat">Chat</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Event Screen -->
+    <div id="createEventScreen" class="screen">
+        <div class="mobile-container">
+            <button class="btn-back" onclick="showScreen('homeScreen')">←</button>
+            <h2 class="screen-title" data-translate="createEvent.title">Create Event</h2>
+            
+            <form id="createEventForm" onsubmit="handleCreateEvent(event)">
+                <div class="form-group">
+                    <label data-translate="createEvent.sport">Sport</label>
+                    <select required>
+                        <option value="football">⚽ Football</option>
+                        <option value="basketball">🏀 Basketball</option>
+                        <option value="tennis">🎾 Tennis</option>
+                        <option value="volleyball">🏐 Volleyball</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-translate="createEvent.eventName">Event Name</label>
+                    <input type="text" placeholder="5v5 Football Match" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="createEvent.location">Location</label>
+                    <select required>
+                        <option>Estadio Municipal El Plantío</option>
+                        <option>Playa de San Juan</option>
+                        <option>Explanada de España</option>
+                        <option>Polideportivo Ciudad de Alicante</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-translate="createEvent.datetime">Date & Time</label>
+                    <input type="datetime-local" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="createEvent.maxPlayers">Max Players</label>
+                    <input type="number" min="2" max="50" value="10" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="createEvent.level">Skill Level</label>
+                    <select required>
+                        <option data-translate="level.beginner">Beginner</option>
+                        <option data-translate="level.intermediate" selected>Intermediate</option>
+                        <option data-translate="level.advanced">Advanced</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-translate="createEvent.description">Description</label>
+                    <textarea rows="4" placeholder="Tell participants about your event..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit" data-translate="createEvent.publish">Publish Event</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Chat Screen -->
+    <div id="chatScreen" class="screen">
+        <div class="mobile-container">
+            <div class="chat-header">
+                <button class="btn-back" onclick="showScreen('eventDetailsScreen')">←</button>
+                <div>
+                    <h3 data-translate="chat.title">Event Chat</h3>
+                    <p class="chat-members">8 members</p>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message">
+                    <div class="message-avatar">👤</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-name">Carlos M.</span>
+                            <span class="message-time">10:30 AM</span>
+                        </div>
+                        <p>Hey everyone! Looking forward to the game! ⚽</p>
+                    </div>
+                </div>
+                <div class="chat-message">
+                    <div class="message-avatar">👤</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-name">Sofia L.</span>
+                            <span class="message-time">10:32 AM</span>
+                        </div>
+                        <p>Same here! Should we bring our own water?</p>
+                    </div>
+                </div>
+                <div class="chat-message own-message">
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-name">You</span>
+                            <span class="message-time">10:35 AM</span>
+                        </div>
+                        <p>Yes, bring water. See you there! 👍</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" placeholder="Type a message..." data-translate-placeholder="chat.typeMessage">
+                <button class="btn-send" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Screen -->
+    <div id="profileScreen" class="screen">
+        <div class="mobile-container">
+            <button class="btn-back" onclick="showScreen('homeScreen')">←</button>
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <h2 class="profile-name">Alex Johnson</h2>
+                <p class="profile-location">📍 Alicante, Spain</p>
+            </div>
+            
+            <div class="profile-stats">
+                <div class="stat-card">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label" data-translate="profile.eventsJoined">Events Joined</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label" data-translate="profile.eventsHosted">Events Hosted</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4.8</div>
+                    <div class="stat-label" data-translate="profile.rating">Rating</div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3 data-translate="profile.achievements">Achievements</h3>
+                <div class="achievements-grid">
+                    <div class="achievement">
+                        <span class="achievement-icon">🏆</span>
+                        <span class="achievement-name">Team Player</span>
+                    </div>
+                    <div class="achievement">
+                        <span class="achievement-icon">⚡</span>
+                        <span class="achievement-name">Quick Joiner</span>
+                    </div>
+                    <div class="achievement">
+                        <span class="achievement-icon">🌟</span>
+                        <span class="achievement-name">Community Star</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3 data-translate="profile.favoriteSports">Favorite Sports</h3>
+                <div class="sport-tags">
+                    <span class="sport-tag">⚽ Football</span>
+                    <span class="sport-tag">🏀 Basketball</span>
+                    <span class="sport-tag">🎾 Tennis</span>
+                </div>
+            </div>
+
+            <button class="btn-secondary" data-translate="profile.editProfile">Edit Profile</button>
+            <button class="btn-logout" data-translate="profile.logout">Logout</button>
+        </div>
+    </div>
+
+    <script src="/Proyecto_JoinUp_DAM/frontend/js/app.js"></script>
+</body>
+</html>
