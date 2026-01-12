@@ -1,307 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JoinUp - Meet. Play. Connect.</title>
-    <link rel="stylesheet" href="/Proyecto_JoinUp_DAM/frontend/css/styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JoinUp - Sports Meetups</title>
+    <meta name="theme-color" content="#0ea5e9" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="./css/styles.css" />
 </head>
+
 <body>
-    <!-- Welcome Screen -->
-    <div id="welcomeScreen" class="screen active">
-        <div class="welcome-container">
-            <div class="logo-container">
-                <div class="logo-icon">⚡</div>
-            </div>
-            <h1 class="welcome-title">JoinUp</h1>
-            <p class="welcome-tagline">Meet. Play. Connect.</p>
-            <button class="btn-primary" onclick="showScreen('loginScreen')">Get Started</button>
-            <button class="btn-language" onclick="toggleLanguage()">🌐 <span id="langToggle">ES</span></button>
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-mark">⚡</span>
+            <span class="brand-name">JoinUp</span>
         </div>
-    </div>
 
-    <!-- Login Screen -->
-    <div id="loginScreen" class="screen">
-        <div class="mobile-container">
-            <button class="btn-back" onclick="showScreen('welcomeScreen')">← Back</button>
-            <div class="login-content">
-                <h2 class="screen-title" data-translate="login.title">Welcome Back</h2>
-                <p class="screen-subtitle" data-translate="login.subtitle">Sign in to continue</p>
-                
-                <form id="loginForm" onsubmit="handleLogin(event)">
-                    <div class="form-group">
-                        <label data-translate="login.email">Email</label>
-                        <input type="email" placeholder="your@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-translate="login.password">Password</label>
-                        <input type="password" placeholder="••••••••" required>
-                    </div>
-                    <button type="submit" class="btn-submit" data-translate="login.signIn">Sign In</button>
-                </form>
-                
-                <div class="divider">or</div>
-                
-                <button class="btn-google">
-                    <span>🔍</span> Continue with Google
-                </button>
-                
-                <p class="signup-link">
-                    <span data-translate="login.noAccount">Don't have an account?</span> 
-                    <a href="#" data-translate="login.signUp">Sign Up</a>
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Home Feed Screen -->
-    <div id="homeScreen" class="screen">
-        <div class="mobile-container">
-            <!-- Header -->
-            <div class="home-header">
-                <div>
-                    <h2 class="header-title" data-translate="home.title">Discover Events</h2>
-                    <p class="header-location">📍 Alicante, Spain</p>
-                </div>
-                <button class="btn-icon" onclick="showScreen('profileScreen')">👤</button>
-            </div>
-
-            <!-- Search Bar -->
-            <div class="search-bar">
-                <input type="text" placeholder="Search events..." data-translate-placeholder="home.search">
-                <button class="btn-icon">🔍</button>
-            </div>
-
-            <!-- Sport Filters -->
-            <div class="sport-filters">
-                <button class="filter-chip active" onclick="filterSport('all')">All</button>
-                <button class="filter-chip" onclick="filterSport('football')">⚽ Football</button>
-                <button class="filter-chip" onclick="filterSport('basketball')">🏀 Basketball</button>
-                <button class="filter-chip" onclick="filterSport('tennis')">🎾 Tennis</button>
-                <button class="filter-chip" onclick="filterSport('volleyball')">🏐 Volleyball</button>
-            </div>
-
-            <!-- Event Cards -->
-            <div class="events-grid" id="eventsContainer">
-                <!-- Events will be loaded by JavaScript -->
-            </div>
-
-            <!-- Floating Create Button -->
-            <button class="btn-floating" onclick="showScreen('createEventScreen')">
-                ➕
+        <div class="topbar-actions">
+            <button class="lang-btn" type="button" id="langBtn" aria-label="Language">
+                🌐 <span id="langToggle">ES</span>
             </button>
         </div>
-    </div>
+    </header>
 
-    <!-- Event Details Screen -->
-    <div id="eventDetailsScreen" class="screen">
-        <div class="mobile-container">
-            <button class="btn-back" onclick="showScreen('homeScreen')">←</button>
-            <div class="event-detail-image">
-                <img id="detailImage" src="" alt="Event">
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="sidebar-head">
+                <div class="brand brand-lg">
+                    <span class="brand-mark">⚡</span>
+                    <span class="brand-name">JoinUp</span>
+                </div>
+                <p class="sidebar-sub" data-translate="sidebar.sub">Sports meetups in Alicante</p>
             </div>
-            <div class="event-detail-content">
-                <div class="event-detail-header">
-                    <h2 id="detailTitle">Event Title</h2>
-                    <span class="event-badge" id="detailLevel">Intermediate</span>
-                </div>
-                <div class="event-detail-info">
-                    <div class="info-item">
-                        <span class="info-icon">📍</span>
-                        <span id="detailLocation">Location</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-icon">🕐</span>
-                        <span id="detailTime">Time</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-icon">👥</span>
-                        <span id="detailPlayers">Players</span>
-                    </div>
-                </div>
-                <div class="event-description">
-                    <h3 data-translate="eventDetails.description">Description</h3>
-                    <p id="detailDescription">Looking for players to join a friendly match...</p>
-                </div>
-                <div class="event-participants">
-                    <h3 data-translate="eventDetails.participants">Participants</h3>
-                    <div class="participants-list">
-                        <div class="participant">👤 Carlos M.</div>
-                        <div class="participant">👤 Sofia L.</div>
-                        <div class="participant">👤 Miguel R.</div>
-                    </div>
-                </div>
-                <div class="event-actions">
-                    <button class="btn-submit" onclick="joinEvent()">
-                        <span data-translate="eventDetails.joinEvent">Join Event</span>
-                    </button>
-                    <button class="btn-secondary" onclick="showScreen('chatScreen')">
-                        💬 <span data-translate="eventDetails.chat">Chat</span>
-                    </button>
+
+            <nav class="sidebar-nav">
+                <button class="nav-btn" type="button" data-nav="homeScreen">🏟️ <span
+                        data-translate="nav.home">Home</span></button>
+                <button class="nav-btn" type="button" data-nav="createEventScreen">➕ <span
+                        data-translate="nav.create">Create</span></button>
+                <button class="nav-btn" type="button" data-nav="profileScreen">👤 <span
+                        data-translate="nav.profile">Profile</span></button>
+                <button class="nav-btn danger" type="button" id="logoutBtnSide">🚪 <span
+                        data-translate="profile.logout">Logout</span></button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="pill">
+                    <span class="pill-dot"></span>
+                    <span data-translate="sidebar.tip">Install as an app from your browser menu</span>
                 </div>
             </div>
-        </div>
-    </div>
+        </aside>
 
-    <!-- Create Event Screen -->
-    <div id="createEventScreen" class="screen">
-        <div class="mobile-container">
-            <button class="btn-back" onclick="showScreen('homeScreen')">←</button>
-            <h2 class="screen-title" data-translate="createEvent.title">Create Event</h2>
-            
-            <form id="createEventForm" onsubmit="handleCreateEvent(event)">
-                <div class="form-group">
-                    <label data-translate="createEvent.sport">Sport</label>
-                    <select required>
-                        <option value="football">⚽ Football</option>
-                        <option value="basketball">🏀 Basketball</option>
-                        <option value="tennis">🎾 Tennis</option>
-                        <option value="volleyball">🏐 Volleyball</option>
-                    </select>
+        <main class="main">
+            <section id="welcomeScreen" class="screen active" aria-label="Welcome">
+                <div class="welcome">
+                    <div class="welcome-card">
+                        <div class="welcome-icon">⚡</div>
+                        <h1 class="welcome-title">JoinUp</h1>
+                        <p class="welcome-tagline" data-translate="welcome.tagline">Meet. Play. Connect.</p>
+                        <button class="btn-primary" type="button" data-go="loginScreen"
+                            data-translate="welcome.getStarted">Get Started</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label data-translate="createEvent.eventName">Event Name</label>
-                    <input type="text" placeholder="5v5 Football Match" required>
-                </div>
-                <div class="form-group">
-                    <label data-translate="createEvent.location">Location</label>
-                    <select required>
-                        <option>Estadio Municipal El Plantío</option>
-                        <option>Playa de San Juan</option>
-                        <option>Explanada de España</option>
-                        <option>Polideportivo Ciudad de Alicante</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label data-translate="createEvent.datetime">Date & Time</label>
-                    <input type="datetime-local" required>
-                </div>
-                <div class="form-group">
-                    <label data-translate="createEvent.maxPlayers">Max Players</label>
-                    <input type="number" min="2" max="50" value="10" required>
-                </div>
-                <div class="form-group">
-                    <label data-translate="createEvent.level">Skill Level</label>
-                    <select required>
-                        <option data-translate="level.beginner">Beginner</option>
-                        <option data-translate="level.intermediate" selected>Intermediate</option>
-                        <option data-translate="level.advanced">Advanced</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label data-translate="createEvent.description">Description</label>
-                    <textarea rows="4" placeholder="Tell participants about your event..."></textarea>
-                </div>
-                <button type="submit" class="btn-submit" data-translate="createEvent.publish">Publish Event</button>
-            </form>
-        </div>
-    </div>
+            </section>
 
-    <!-- Chat Screen -->
-    <div id="chatScreen" class="screen">
-        <div class="mobile-container">
-            <div class="chat-header">
-                <button class="btn-back" onclick="showScreen('eventDetailsScreen')">←</button>
-                <div>
-                    <h3 data-translate="chat.title">Event Chat</h3>
-                    <p class="chat-members">8 members</p>
+            <section id="loginScreen" class="screen" aria-label="Login">
+                <div class="page">
+                    <button class="btn-back" type="button" data-go="welcomeScreen">← <span
+                            data-translate="common.back">Back</span></button>
+
+                    <div class="card">
+                        <h2 class="title" data-translate="login.title">Welcome Back</h2>
+                        <p class="subtitle" data-translate="login.subtitle">Sign in to continue</p>
+
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label for="loginEmail" data-translate="login.email">Email</label>
+                                <input id="loginEmail" type="email" placeholder="your@email.com" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="loginPassword" data-translate="login.password">Password</label>
+                                <input id="loginPassword" type="password" placeholder="••••••••" required />
+                            </div>
+                            <button type="submit" class="btn-submit" data-translate="login.signIn">Sign In</button>
+                        </form>
+
+                        <div class="divider"><span data-translate="common.or">or</span></div>
+
+                        <button class="btn-google" type="button" id="googleBtn">
+                            <span>🔍</span> <span data-translate="login.google">Continue with Google</span>
+                        </button>
+
+                        <p class="switch">
+                            <span data-translate="login.noAccount">Don't have an account?</span>
+                            <a href="#" data-go="signupScreen" data-translate="login.signUp">Sign Up</a>
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="chat-message">
-                    <div class="message-avatar">👤</div>
-                    <div class="message-content">
-                        <div class="message-header">
-                            <span class="message-name">Carlos M.</span>
-                            <span class="message-time">10:30 AM</span>
+            </section>
+
+            <section id="signupScreen" class="screen" aria-label="Signup">
+                <div class="page">
+                    <button class="btn-back" type="button" data-go="loginScreen">← <span
+                            data-translate="common.back">Back</span></button>
+
+                    <div class="card">
+                        <h2 class="title" data-translate="signup.title">Create Account</h2>
+                        <p class="subtitle" data-translate="signup.subtitle">Join the community in seconds</p>
+
+                        <form id="signupForm">
+                            <div class="form-group">
+                                <label for="signupName" data-translate="signup.name">Name</label>
+                                <input id="signupName" type="text" placeholder="Alex Johnson" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="signupEmail" data-translate="signup.email">Email</label>
+                                <input id="signupEmail" type="email" placeholder="your@email.com" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="signupPassword" data-translate="signup.password">Password</label>
+                                <input id="signupPassword" type="password" placeholder="••••••••" minlength="6"
+                                    required />
+                            </div>
+                            <button type="submit" class="btn-submit" data-translate="signup.create">Create
+                                Account</button>
+                        </form>
+
+                        <p class="switch">
+                            <span data-translate="signup.haveAccount">Already have an account?</span>
+                            <a href="#" data-go="loginScreen" data-translate="signup.signIn">Sign In</a>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="homeScreen" class="screen" aria-label="Home">
+                <div class="page">
+                    <div class="home-head">
+                        <div>
+                            <h2 class="home-title" data-translate="home.title">Discover Events</h2>
+                            <p class="home-loc">📍 Alicante, Spain</p>
                         </div>
-                        <p>Hey everyone! Looking forward to the game! ⚽</p>
-                    </div>
-                </div>
-                <div class="chat-message">
-                    <div class="message-avatar">👤</div>
-                    <div class="message-content">
-                        <div class="message-header">
-                            <span class="message-name">Sofia L.</span>
-                            <span class="message-time">10:32 AM</span>
+                        <div class="home-actions">
+                            <button class="btn-icon" type="button" data-go="createEventScreen"
+                                aria-label="Create">➕</button>
+                            <button class="btn-icon" type="button" data-go="profileScreen"
+                                aria-label="Profile">👤</button>
                         </div>
-                        <p>Same here! Should we bring our own water?</p>
                     </div>
+
+                    <div class="search">
+                        <input id="searchInput" type="text" data-translate-placeholder="home.search"
+                            placeholder="Search events..." />
+                        <button class="btn-icon" type="button" id="searchBtn" aria-label="Search">🔍</button>
+                    </div>
+
+                    <div class="filters" id="filters">
+                        <button class="chip active" type="button" data-filter="all"
+                            data-translate="filters.all">All</button>
+                        <button class="chip" type="button" data-filter="football">⚽ <span
+                                data-translate="sport.football">Football</span></button>
+                        <button class="chip" type="button" data-filter="basketball">🏀 <span
+                                data-translate="sport.basketball">Basketball</span></button>
+                        <button class="chip" type="button" data-filter="tennis">🎾 <span
+                                data-translate="sport.tennis">Tennis</span></button>
+                        <button class="chip" type="button" data-filter="volleyball">🏐 <span
+                                data-translate="sport.volleyball">Volleyball</span></button>
+                        <button class="chip" type="button" data-filter="padel">🎾 <span
+                                data-translate="sport.padel">Padel</span></button>
+                        <button class="chip" type="button" data-filter="running">🏃 <span
+                                data-translate="sport.running">Running</span></button>
+                    </div>
+
+                    <div class="grid" id="eventsContainer"></div>
+
+                    <button class="fab" type="button" data-go="createEventScreen" aria-label="Create">➕</button>
                 </div>
-                <div class="chat-message own-message">
-                    <div class="message-content">
-                        <div class="message-header">
-                            <span class="message-name">You</span>
-                            <span class="message-time">10:35 AM</span>
+            </section>
+
+            <section id="eventDetailsScreen" class="screen" aria-label="Event Details">
+                <div class="page">
+                    <button class="btn-back" type="button" data-go="homeScreen">← <span
+                            data-translate="common.back">Back</span></button>
+
+                    <div class="detail">
+                        <div class="detail-media">
+                            <img id="detailImage" src="" alt="Event" />
                         </div>
-                        <p>Yes, bring water. See you there! 👍</p>
+
+                        <div class="detail-card">
+                            <div class="detail-top">
+                                <h2 id="detailTitle">Event Title</h2>
+                                <span class="badge" id="detailLevel">Intermediate</span>
+                            </div>
+
+                            <div class="detail-info">
+                                <div class="info-row"><span>📍</span><span id="detailLocation"></span></div>
+                                <div class="info-row"><span>🕐</span><span id="detailTime"></span></div>
+                                <div class="info-row"><span>👥</span><span id="detailPlayers"></span></div>
+                            </div>
+
+                            <div class="block">
+                                <h3 data-translate="eventDetails.description">Description</h3>
+                                <p id="detailDescription" class="muted"></p>
+                            </div>
+
+                            <div class="block">
+                                <h3 data-translate="eventDetails.participants">Participants</h3>
+                                <div class="participants" id="participantsList"></div>
+                            </div>
+
+                            <div class="actions">
+                                <button class="btn-submit" type="button" id="joinLeaveBtn">
+                                    <span id="joinBtnText" data-translate="eventDetails.joinEvent">Join Event</span>
+                                </button>
+                                <button class="btn-secondary" type="button" id="chatBtn">
+                                    💬 <span data-translate="eventDetails.chat">Chat</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="chat-input-container">
-                <input type="text" id="chatInput" placeholder="Type a message..." data-translate-placeholder="chat.typeMessage">
-                <button class="btn-send" onclick="sendMessage()">➤</button>
-            </div>
-        </div>
+            </section>
+
+            <section id="createEventScreen" class="screen" aria-label="Create Event">
+                <div class="page">
+                    <button class="btn-back" type="button" data-go="homeScreen">← <span
+                            data-translate="common.back">Back</span></button>
+
+                    <div class="card">
+                        <h2 class="title" data-translate="createEvent.title">Create Event</h2>
+
+                        <form id="createEventForm">
+                            <div class="form-group">
+                                <label for="createSport" data-translate="createEvent.sport">Sport</label>
+                                <select id="createSport" required>
+                                    <option value="football">⚽ Football</option>
+                                    <option value="basketball">🏀 Basketball</option>
+                                    <option value="tennis">🎾 Tennis</option>
+                                    <option value="volleyball">🏐 Volleyball</option>
+                                    <option value="padel">🎾 Padel</option>
+                                    <option value="running">🏃 Running</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="createTitle" data-translate="createEvent.eventName">Event Name</label>
+                                <input id="createTitle" type="text" placeholder="5v5 Football Match" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="createLocation" data-translate="createEvent.location">Location</label>
+                                <input id="createLocation" type="text" placeholder="Playa de San Juan" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="createDatetime" data-translate="createEvent.datetime">Date & Time</label>
+                                <input id="createDatetime" type="datetime-local" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="createMaxPlayers" data-translate="createEvent.maxPlayers">Max
+                                    Players</label>
+                                <input id="createMaxPlayers" type="number" min="2" max="50" value="10" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="createLevel" data-translate="createEvent.level">Skill Level</label>
+                                <select id="createLevel" required>
+                                    <option value="Beginner" data-translate="level.beginner">Beginner</option>
+                                    <option value="Intermediate" data-translate="level.intermediate" selected>
+                                        Intermediate</option>
+                                    <option value="Advanced" data-translate="level.advanced">Advanced</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="createDescription"
+                                    data-translate="createEvent.description">Description</label>
+                                <textarea id="createDescription" rows="4"
+                                    data-translate-placeholder="createEvent.descPh"
+                                    placeholder="Tell participants about your event..." required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn-submit" data-translate="createEvent.publish">Publish
+                                Event</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <section id="chatScreen" class="screen" aria-label="Chat">
+                <div class="page">
+                    <div class="chat-head">
+                        <button class="btn-back" type="button" data-go="eventDetailsScreen">← <span
+                                data-translate="common.back">Back</span></button>
+                        <div class="chat-meta">
+                            <h3 data-translate="chat.title">Event Chat</h3>
+                            <p class="muted" id="chatMembers">0 members</p>
+                        </div>
+                    </div>
+
+                    <div class="chat-box">
+                        <div class="chat-messages" id="chatMessages"></div>
+                        <div class="chat-input">
+                            <input type="text" id="chatInput" data-translate-placeholder="chat.typeMessage"
+                                placeholder="Type a message..." />
+                            <button class="btn-send" type="button" id="sendBtn">➤</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="profileScreen" class="screen" aria-label="Profile">
+                <div class="page">
+                    <button class="btn-back" type="button" data-go="homeScreen">← <span
+                            data-translate="common.back">Back</span></button>
+
+                    <div class="profile">
+                        <div class="profile-top">
+                            <div class="avatar">👤</div>
+                            <h2 id="profileName">User</h2>
+                            <p class="muted">📍 Alicante, Spain</p>
+                        </div>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-num" id="statJoined">0</div>
+                                <div class="stat-lbl" data-translate="profile.eventsJoined">Events Joined</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-num" id="statHosted">0</div>
+                                <div class="stat-lbl" data-translate="profile.eventsHosted">Events Hosted</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-num">4.8</div>
+                                <div class="stat-lbl" data-translate="profile.rating">Rating</div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="title-sm" data-translate="profile.editTitle">Edit Profile</h3>
+                            <div class="form-group">
+                                <label for="editName" data-translate="signup.name">Name</label>
+                                <input id="editName" type="text" />
+                            </div>
+                            <button class="btn-secondary" type="button" id="saveProfileBtn"
+                                data-translate="profile.save">Save</button>
+                        </div>
+
+                        <button class="btn-logout" type="button" id="logoutBtn"
+                            data-translate="profile.logout">Logout</button>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <!-- Profile Screen -->
-    <div id="profileScreen" class="screen">
-        <div class="mobile-container">
-            <button class="btn-back" onclick="showScreen('homeScreen')">←</button>
-            <div class="profile-header">
-                <div class="profile-avatar">👤</div>
-                <h2 class="profile-name">Alex Johnson</h2>
-                <p class="profile-location">📍 Alicante, Spain</p>
-            </div>
-            
-            <div class="profile-stats">
-                <div class="stat-card">
-                    <div class="stat-number">24</div>
-                    <div class="stat-label" data-translate="profile.eventsJoined">Events Joined</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">12</div>
-                    <div class="stat-label" data-translate="profile.eventsHosted">Events Hosted</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">4.8</div>
-                    <div class="stat-label" data-translate="profile.rating">Rating</div>
-                </div>
-            </div>
+    <div id="toast" class="toast"></div>
 
-            <div class="profile-section">
-                <h3 data-translate="profile.achievements">Achievements</h3>
-                <div class="achievements-grid">
-                    <div class="achievement">
-                        <span class="achievement-icon">🏆</span>
-                        <span class="achievement-name">Team Player</span>
-                    </div>
-                    <div class="achievement">
-                        <span class="achievement-icon">⚡</span>
-                        <span class="achievement-name">Quick Joiner</span>
-                    </div>
-                    <div class="achievement">
-                        <span class="achievement-icon">🌟</span>
-                        <span class="achievement-name">Community Star</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="profile-section">
-                <h3 data-translate="profile.favoriteSports">Favorite Sports</h3>
-                <div class="sport-tags">
-                    <span class="sport-tag">⚽ Football</span>
-                    <span class="sport-tag">🏀 Basketball</span>
-                    <span class="sport-tag">🎾 Tennis</span>
-                </div>
-            </div>
-
-            <button class="btn-secondary" data-translate="profile.editProfile">Edit Profile</button>
-            <button class="btn-logout" data-translate="profile.logout">Logout</button>
-        </div>
-    </div>
-
-    <script src="/Proyecto_JoinUp_DAM/frontend/js/app.js"></script>
+    <script src="./js/app.js"></script>
 </body>
+
 </html>
