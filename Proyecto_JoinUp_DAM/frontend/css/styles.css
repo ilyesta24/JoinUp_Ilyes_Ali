@@ -905,3 +905,78 @@ textarea:focus {
         grid-template-columns: 1fr
     }
 }
+
+/* ===== FOOTER ===== */
+.footer {
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.footer-copyright {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.brand-mark-small {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--primary), var(--primary2));
+  color: #fff;
+  font-size: 10px;
+}
+
+.version-badge {
+  background: #e5e7eb;
+  color: var(--text);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive para móvil */
+@media (max-width: 520px) {
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+}
+
+/* Para desktop (cuando se muestra sidebar) */
+@media (min-width: 1000px) {
+  .footer {
+    grid-column: 1 / -1;
+    border-radius: 0 0 18px 18px;
+    border-top: none;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(14px);
+  }
+  
+  .footer-content {
+    max-width: 820px;
+  }
+} 
+
+
+
